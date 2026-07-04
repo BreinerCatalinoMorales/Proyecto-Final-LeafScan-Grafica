@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeafScan — Detector de Enfermedades en Hojas</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">🌿 LeafScan</div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Inicio</a></li>
+      <li><a href="about.html">Metodología</a></li>
+      <li><a href="results.html">Resultados</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-content">
+      <span class="hero-badge">Computación Gráfica · 2026</span>
+      <h1>Detector Inteligente de<br>Enfermedades en Hojas</h1>
+      <p class="hero-sub">
+        Analizamos imágenes de plantas con dos enfoques: un pipeline clásico
+        sin supervisión (K-means + morfología) y una red neuronal convolucional.
+        Comparamos cuál detecta mejor, cuándo y por qué.
+      </p>
+      <div class="hero-actions">
+        <a href="#analizar" class="btn btn-primary">Analizar una hoja</a>
+        <a href="about.html" class="btn btn-outline">Cómo funciona</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="leaf-card">
+        <div class="leaf-icon">🍃</div>
+        <div class="scan-line"></div>
+        <div class="leaf-status">Analizando...</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="problema">
+    <div class="container">
+      <h2 class="section-title">El problema</h2>
+      <div class="cards-row">
+        <div class="card">
+          <div class="card-icon">🔍</div>
+          <h3>Detección tardía</h3>
+          <p>Las enfermedades suelen identificarse cuando ya han afectado grandes extensiones de cultivo, haciendo difícil su control.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">👁️</div>
+          <h3>Inspección manual</h3>
+          <p>Depende de la experiencia de cada persona. Factores como la iluminación y el fondo complican el análisis visual.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">💸</div>
+          <h3>Pérdidas económicas</h3>
+          <p>Para pequeños productores, sin herramientas automáticas accesibles, el daño en cultivos puede ser devastador.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="solucion">
+    <div class="container">
+      <h2 class="section-title">Nuestra propuesta</h2>
+      <p class="section-sub">
+        Comparamos dos métodos sobre las mismas imágenes para entender
+        cuál es mejor, cuándo y a qué costo computacional.
+      </p>
+      <div class="methods-row">
+
+        <div class="method-card method-classic">
+          <div class="method-tag">Método 1</div>
+          <h3>Pipeline clásico</h3>
+          <p class="method-desc">Sin supervisión — no necesita datos etiquetados</p>
+          <ol class="method-steps">
+            <li>Preprocesamiento (filtros Gaussiano y pasa alto)</li>
+            <li>Análisis de color en espacio HSV</li>
+            <li>Segmentación K-means (k=3 clusters)</li>
+            <li>Morfología: apertura → cierre → erosión → dilatación</li>
+            <li>Análisis de componentes conectados</li>
+          </ol>
+          <div class="method-badge">✦ Aporte original del proyecto</div>
+        </div>
+
+        <div class="method-divider">VS</div>
+
+        <div class="method-card method-cnn">
+          <div class="method-tag">Método 2</div>
+          <h3>Red neuronal (CNN)</h3>
+          <p class="method-desc">Con transfer learning sobre dataset etiquetado</p>
+          <ol class="method-steps">
+            <li>Base: MobileNetV2 preentrenado en ImageNet</li>
+            <li>Fine-tuning con imágenes de hojas</li>
+            <li>Clasificación: sana vs enferma</li>
+            <li>Grad-CAM para visualizar zonas activadas</li>
+            <li>Evaluación: F1, accuracy, IoU</li>
+          </ol>
+          <div class="method-badge">✦ Comparativa rigurosa</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="flujo">
+    <div class="container">
+      <h2 class="section-title">Flujo de procesamiento</h2>
+      <div class="pipeline-flow">
+        <div class="pipe-step">
+          <div class="pipe-icon">📷</div>
+          <div class="pipe-label">Imagen entrada</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step">
+          <div class="pipe-icon">🔧</div>
+          <div class="pipe-label">Preproceso</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step">
+          <div class="pipe-icon">🎨</div>
+          <div class="pipe-label">Color HSV</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step">
+          <div class="pipe-icon">🧩</div>
+          <div class="pipe-label">K-means</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step">
+          <div class="pipe-icon">⬡</div>
+          <div class="pipe-label">Morfología</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step pipe-step-result">
+          <div class="pipe-icon">📊</div>
+          <div class="pipe-label">Resultado</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="analizar">
+    <div class="container">
+      <h2 class="section-title">Analizar una hoja</h2>
+      <p class="section-sub">
+        Sube una foto y el sistema detectará si está sana o enferma,
+        calculará el área infectada y comparará ambos métodos.
+      </p>
+
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="fileInput" accept="image/*" hidden>
+        <div class="upload-icon">📷</div>
+        <p class="upload-text">
+          Arrastra tu imagen aquí o
+          <span class="upload-link">haz clic para seleccionar</span>
+        </p>
+        <p class="upload-hint">JPG · PNG — máximo 15 MB</p>
+      </div>
+
+      <div class="upload-preview hidden" id="uploadPreview">
+        <img id="previewImg" src="" alt="Vista previa">
+        <div class="preview-info">
+          <span id="previewName" class="preview-name"></span>
+          <button class="btn-outline-sm" id="changeImg">Cambiar imagen</button>
+        </div>
+      </div>
+
+      <div class="upload-actions hidden" id="uploadActions">
+        <button class="btn btn-primary btn-lg" id="analyzeBtn">
+          🔬 Analizar imagen
+        </button>
+      </div>
+
+      <div class="upload-loading hidden" id="uploadLoading">
+        <div class="spinner"></div>
+        <p>Procesando con pipeline clásico y CNN…</p>
+        <p class="upload-hint">Esto puede tardar unos segundos</p>
+      </div>
+
+      <div class="upload-error hidden" id="uploadError">
+        <span class="error-icon">⚠️</span>
+        <p id="errorMsg"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="equipo">
+    <div class="container">
+      <h2 class="section-title">Equipo</h2>
+      <div class="team-row">
+        <div class="team-card">
+          <div class="team-avatar">JE</div>
+          <div class="team-name">Jose Espinoza</div>
+          <div class="team-role">Pipeline clásico · Datos</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">HH</div>
+          <div class="team-name">Henry Huanca</div>
+          <div class="team-role">CNN · Evaluación · Comparativa</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">BC</div>
+          <div class="team-name">Breine Catalino</div>
+          <div class="team-role">Visualización · Web · API</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>🌿 LeafScan · Proyecto de Computación Gráfica · 2026</p>
+    <p>Espinoza · Huanca · Catalino</p>
+  </footer>
+
+  <script src="js/upload.js"></script>
+</body>
+</html>

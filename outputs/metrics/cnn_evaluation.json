@@ -1,0 +1,35 @@
+{
+  "accuracy": 0.9835,
+  "macro_precision": 0.9236,
+  "macro_recall": 0.9862,
+  "macro_f1": 0.9522,
+  "per_class": {
+    "diseased": {
+      "precision": 0.999,
+      "recall": 0.9829,
+      "f1": 0.9909,
+      "support": 1989
+    },
+    "healthy": {
+      "precision": 0.8482,
+      "recall": 0.9896,
+      "f1": 0.9135,
+      "support": 192
+    }
+  },
+  "confusion_matrix": [
+    [
+      1955,
+      34
+    ],
+    [
+      2,
+      190
+    ]
+  ],
+  "tp": 1955,
+  "fp": 2,
+  "fn": 34,
+  "tn": 190,
+  "n_samples": 2181
+}

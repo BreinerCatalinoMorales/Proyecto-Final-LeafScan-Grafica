@@ -1,0 +1,54 @@
+# ============================================================
+# config.yaml  —  Parámetros globales del proyecto
+# Detector Inteligente de Enfermedades en Hojas de Plantas
+# ============================================================
+
+paths:
+  data_raw:       "../data/raw/"
+  data_processed: "../data/processed/"
+  data_labels:    "../data/labels/"
+  data_splits:    "../data/splits/"
+  outputs_heatmaps:   "../outputs/heatmaps/"
+  outputs_segmented:  "../outputs/segmented/"
+  outputs_gradcam:    "../outputs/gradcam/"
+  outputs_metrics:    "../outputs/metrics/"
+  models:             "../models/"
+preprocessing:
+  image_size: [256, 256]          # Tamaño al que se redimensionan todas las imágenes
+  gaussian_blur_kernel: 5         # Tamaño del kernel para Gaussian Blur (impar)
+  gaussian_blur_sigma: 1.0        # Sigma del filtro Gaussiano
+  sharpen_alpha: 1.5              # Factor de realce para filtro pasa alto
+  normalize_mean: [0.485, 0.456, 0.406]   # Media por canal RGB (ImageNet)
+  normalize_std:  [0.229, 0.224, 0.225]   # Desviación estándar por canal RGB
+
+color_analysis:
+  hsv_hue_bins: 36                # Número de bins para histograma de Hue
+  hsv_sat_bins: 32                # Bins para Saturación
+  hsv_val_bins: 32                # Bins para Value/Brillo
+  rgb_bins: 64                    # Bins para histogramas RGB
+
+segmentation:
+  kmeans_k: 3                     # Número de clusters K-means
+  kmeans_max_iter: 100            # Iteraciones máximas del algoritmo
+  kmeans_attempts: 5              # Intentos para buscar mejor resultado
+  # Rango HSV para detectar zonas enfermas (amarillo-marrón-necrótico)
+  disease_hue_min: 15             # Hue mínimo (grados / 2 en OpenCV = 0-180)
+  disease_hue_max: 35
+  disease_sat_min: 40
+  disease_val_min: 50
+
+morphology:
+  kernel_size: 5                  # Tamaño del kernel morfológico
+  erosion_iterations: 2
+  dilation_iterations: 2
+  opening_kernel: 7               # Kernel para apertura (eliminar ruido pequeño)
+  closing_kernel: 9               # Kernel para cierre (rellenar huecos)
+
+dataset:
+  train_ratio: 0.70
+  val_ratio:   0.15
+  test_ratio:  0.15
+  random_seed: 42
+  classes:
+    - "healthy"
+    - "diseased"

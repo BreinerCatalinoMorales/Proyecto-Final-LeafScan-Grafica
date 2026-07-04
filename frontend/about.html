@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Metodología — LeafScan</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">🌿 LeafScan</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="about.html" class="active">Metodología</a></li>
+      <li><a href="results.html">Resultados</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>Metodología</h1>
+      <p>Cómo funciona el sistema por dentro</p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="method-header method-header-classic">
+        <span class="method-pill">Método 1</span>
+        <h2>Pipeline Clásico — Sin supervisión</h2>
+        <p>Detecta zonas enfermas basándose únicamente en propiedades de color, sin necesitar datos etiquetados.</p>
+      </div>
+
+      <div class="steps-list">
+
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h3>Preprocesamiento</h3>
+            <p>
+              Se aplica <strong>Gaussian Blur</strong> (filtro pasa bajo) para reducir ruido de alta frecuencia.
+              Luego un <strong>filtro pasa alto</strong> (unsharp masking) para realzar bordes y texturas de las manchas.
+              Finalmente, detección de contornos con <strong>Canny</strong>.
+            </p>
+            <div class="tech-tags">
+              <span>GaussianBlur</span><span>Unsharp Masking</span><span>Canny</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h3>Análisis de color en RGB y HSV</h3>
+            <p>
+              Se analizan histogramas en ambos espacios de color. El espacio <strong>HSV</strong> es clave
+              porque separa mejor el tono (Hue) de la luminosidad, permitiendo identificar zonas
+              amarillas, marrones y necróticas independientemente de la iluminación de la foto.
+            </p>
+            <div class="tech-tags">
+              <span>Espacio HSV</span><span>Histogramas por canal</span><span>Detección por rango</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h3>Segmentación K-means (sin etiquetas)</h3>
+            <p>
+              Cada píxel se representa por sus valores HSV y se agrupan en <strong>k=3 clusters</strong>
+              mediante K-means++. El algoritmo descubre automáticamente zonas: fondo, hoja sana y hoja enferma.
+              Se identifica el cluster de enfermedad por su posición en el espacio de color (Hue amarillo-marrón).
+            </p>
+            <div class="tech-tags">
+              <span>K-means++</span><span>k=3 clusters</span><span>Espacio HSV</span><span>Sin supervisión</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h3>Morfología matemática</h3>
+            <p>
+              La máscara binaria generada por K-means se refina con operaciones morfológicas en secuencia:
+              <strong>apertura</strong> (elimina ruido pequeño) → <strong>cierre</strong> (rellena huecos)
+              → <strong>erosión</strong> → <strong>dilatación</strong> para dar forma precisa a las regiones.
+            </p>
+            <div class="tech-tags">
+              <span>Apertura</span><span>Cierre</span><span>Erosión</span><span>Dilatación</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <h3>Componentes conectados y métricas</h3>
+            <p>
+              Se identifican manchas individuales separadas mediante análisis de
+              <strong>componentes conectados</strong>. Para cada mancha se calcula área, bounding box
+              y centroide. El resultado final incluye: número de manchas, área infectada total
+              y porcentaje de infección respecto al área de la hoja.
+            </p>
+            <div class="tech-tags">
+              <span>Componentes conectados</span><span>Área infectada</span><span>Bounding boxes</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="method-header method-header-cnn">
+        <span class="method-pill method-pill-cnn">Método 2</span>
+        <h2>Red Neuronal Convolucional (CNN)</h2>
+        <p>Transfer learning sobre MobileNetV2 para clasificar hojas sanas y enfermas con alta precisión.</p>
+      </div>
+
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-num step-num-cnn">1</div>
+          <div class="step-body">
+            <h3>Modelo base: MobileNetV2</h3>
+            <p>Se parte de MobileNetV2 preentrenado en ImageNet. Se congela la mayoría de capas y se reentrena solo las últimas capas con imágenes de hojas para reducir tiempo de entrenamiento.</p>
+            <div class="tech-tags"><span>MobileNetV2</span><span>Transfer Learning</span><span>Fine-tuning</span></div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num step-num-cnn">2</div>
+          <div class="step-body">
+            <h3>Entrenamiento con data augmentation</h3>
+            <p>Se aplican rotaciones, flips y cambios de brillo para aumentar la variedad del dataset y evitar sobreajuste.</p>
+            <div class="tech-tags"><span>Data Augmentation</span><span>PyTorch</span><span>CrossEntropyLoss</span></div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num step-num-cnn">3</div>
+          <div class="step-body">
+            <h3>Evaluación y Grad-CAM</h3>
+            <p>Se evalúa con F1, accuracy, precision, recall e IoU. Grad-CAM genera mapas de activación que muestran qué regiones de la hoja activaron la decisión del modelo.</p>
+            <div class="tech-tags"><span>F1 Score</span><span>IoU</span><span>Grad-CAM</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">¿Por qué compararlos?</h2>
+      <p class="section-sub">
+        La mayoría de proyectos similares solo usan CNN. Nosotros mostramos cuándo el método clásico
+        es suficiente (y más rápido) y cuándo la CNN es necesaria.
+      </p>
+      <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Criterio</th>
+              <th>Pipeline Clásico</th>
+              <th>CNN</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Datos etiquetados</td><td class="green">No necesita</td><td class="red">Sí necesita</td></tr>
+            <tr><td>Velocidad de inferencia</td><td class="green">Muy rápido</td><td class="yellow">Moderado</td></tr>
+            <tr><td>Precisión general</td><td class="yellow">Buena</td><td class="green">Alta</td></tr>
+            <tr><td>Interpretabilidad</td><td class="green">Alta (visual directo)</td><td class="yellow">Media (Grad-CAM)</td></tr>
+            <tr><td>Recursos necesarios</td><td class="green">Mínimos</td><td class="red">GPU recomendada</td></tr>
+            <tr><td>Falla con...</td><td class="red">Iluminación variable</td><td class="red">Datos insuficientes</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>🌿 LeafScan · Proyecto de Computación Gráfica · 2026</p>
+    <p>Espinoza · Huanca · Catalino</p>
+  </footer>
+
+</body>
+</html>

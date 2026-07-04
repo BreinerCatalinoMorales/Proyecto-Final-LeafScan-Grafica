@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resultados — LeafScan</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">🌿 LeafScan</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="about.html">Metodología</a></li>
+      <li><a href="results.html" class="active">Resultados</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>Resultados del análisis</h1>
+      <p id="resultFilename">Cargando…</p>
+    </div>
+  </div>
+
+  <section class="section hidden" id="noResult">
+    <div class="container" style="text-align:center; padding: 60px 20px;">
+      <div style="font-size:3rem; margin-bottom:16px;">🍃</div>
+      <h2 style="color:var(--green-dark); margin-bottom:12px;">
+        No hay ningún análisis cargado
+      </h2>
+      <p style="color:var(--gray-mid); margin-bottom:32px;">
+        Sube una imagen desde la página principal para ver los resultados aquí.
+      </p>
+      <a href="index.html#analizar" class="btn btn-primary">Analizar una hoja</a>
+    </div>
+  </section>
+
+  <div id="resultContent">
+
+    <section class="section">
+      <div class="container">
+        <div class="verdict-box" id="verdict">
+          <span class="verdict-icon" id="verdictIcon"></span>
+          <div>
+            <div class="verdict-title" id="verdictText"></div>
+            <div class="verdict-sub"   id="verdictSub"></div>
+          </div>
+        </div>
+
+        <div style="text-align:center; margin-top:28px;">
+          <button class="btn btn-outline" id="newAnalysisBtn">
+            ↩ Analizar otra imagen
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <h2 class="section-title">Métricas del pipeline clásico</h2>
+        <div class="metrics-row">
+          <div class="metric-card">
+            <div class="metric-value" id="metInfection">—</div>
+            <div class="metric-label">Área infectada (final)</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="metSpots">—</div>
+            <div class="metric-label">Manchas detectadas</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="metKmeans">—</div>
+            <div class="metric-label">Área enferma (K-means)</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="metColor">—</div>
+            <div class="metric-label">Área enferma (color HSV)</div>
+          </div>
+        </div>
+
+        <div class="warning-box hidden" id="noHealthyRefWarning">
+          <span class="warning-icon">⚠️</span>
+          <p>
+            No se detectó, dentro de esta imagen, una región de hoja sana
+            claramente distinta de la zona marcada como "enferma". Esto puede
+            deberse a dos motivos opuestos: (1) la zona marcada es en realidad
+            el color natural de toda la hoja (p. ej. un brote joven de tono
+            uniforme, sin enfermedad real), o (2) la enfermedad es tan extendida
+            que cubre casi toda la hoja sin dejar tejido sano de referencia.
+            Se recomienda revisar visualmente para distinguir ambos casos.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">Visualización por etapas</h2>
+
+        <div class="result-img-row">
+          <div class="result-img-card">
+            <div class="result-img-label">
+              <span class="stage-num">1</span> Imagen original
+            </div>
+            <img id="imgOriginal" src="" alt="Original" class="result-img">
+          </div>
+          <div class="result-img-card result-img-card--highlight">
+            <div class="result-img-label">
+              <span class="stage-num stage-num--accent">★</span> Detección de enfermedades
+            </div>
+            <img id="imgOverlay" src="" alt="Overlay enfermedad" class="result-img">
+          </div>
+        </div>
+
+        <div class="result-img-row">
+          <div class="result-img-card">
+            <div class="result-img-label">
+              <span class="stage-num">2</span> Filtro Gaussiano (preproceso)
+            </div>
+            <img id="imgBlurred" src="" alt="Blurred" class="result-img">
+          </div>
+          <div class="result-img-card">
+            <div class="result-img-label">
+              <span class="stage-num">3</span> Segmentación K-means
+            </div>
+            <img id="imgSegmented" src="" alt="K-means" class="result-img">
+          </div>
+        </div>
+
+        <div class="result-img-row">
+          <div class="result-img-card">
+            <div class="result-img-label">
+              <span class="stage-num">4</span> Máscara morfológica
+            </div>
+            <img id="imgMask" src="" alt="Máscara" class="result-img">
+          </div>
+          <div class="result-img-card">
+            <div class="result-img-label">
+              <span class="stage-num">5</span> Detección final (anotada)
+            </div>
+            <img id="imgAnnotated" src="" alt="Anotada" class="result-img">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt hidden" id="cnnSection">
+      <div class="container">
+        <h2 class="section-title">Resultado CNN (Transfer Learning)</h2>
+
+        <div class="cnn-result-box">
+          <div class="cnn-prediction">
+            <span id="cnnLabelBadge" class="cnn-badge">—</span>
+            <div class="cnn-meta">
+              <span class="cnn-label-text" id="cnnLabel">—</span>
+              <span class="cnn-conf">Confianza: <strong id="cnnConfidence">—</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-img-row">
+          <div class="result-img-card">
+            <div class="result-img-label">
+              <span class="stage-num stage-num--cnn">1</span> Entrada de la CNN (224×224)
+            </div>
+            <img id="imgCnnInput" src="" alt="Entrada CNN" class="result-img">
+          </div>
+          <div class="result-img-card">
+            <div class="result-img-label">
+              <span class="stage-num stage-num--cnn">2</span> Mapa de activación (Grad-CAM)
+            </div>
+            <img id="imgCnnHeatmap" src="" alt="Heatmap Grad-CAM" class="result-img">
+          </div>
+        </div>
+
+        <div class="result-img-row">
+          <div class="result-img-card">
+            <div class="result-img-label">
+              <span class="stage-num stage-num--cnn">3</span> Máscara derivada (umbral Grad-CAM)
+            </div>
+            <img id="imgCnnMask" src="" alt="Máscara CNN" class="result-img">
+          </div>
+          <div class="result-img-card result-img-card--highlight">
+            <div class="result-img-label">
+              <span class="stage-num stage-num--cnn">4</span> Detección final (overlay)
+            </div>
+            <img id="imgGradcam" src="" alt="Grad-CAM overlay" class="result-img">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">Distribución de color</h2>
+        <p class="section-sub">Histogramas RGB y HSV de la imagen analizada</p>
+        <div class="charts-row">
+          <div class="chart-card">
+            <canvas id="chartRGB"></canvas>
+          </div>
+          <div class="chart-card">
+            <canvas id="chartHSV"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="compareSection">
+      <div class="container">
+        <h2 class="section-title">Comparativa: Pipeline clásico vs CNN</h2>
+        <p class="section-sub">Evaluación sobre el conjunto de test completo</p>
+
+        <div class="upload-loading" id="compareLoading">
+          <div class="spinner"></div>
+          <p>Cargando comparativa…</p>
+        </div>
+
+        <div class="coming-soon-box hidden" id="compareUnavailable">
+          <div class="cs-icon">📊</div>
+          <h2>Próximamente: Comparativa clásico vs CNN</h2>
+          <p>
+            En la entrega final se mostrará aquí la tabla comparativa completa entre el
+            pipeline clásico y la CNN, con métricas de F1, accuracy, IoU, velocidad y
+            análisis de casos donde cada método falla.
+          </p>
+          <div class="cs-features">
+            <span class="cs-tag">Tabla F1 · Accuracy · IoU</span>
+            <span class="cs-tag">Curvas de entrenamiento CNN</span>
+            <span class="cs-tag">Mapas Grad-CAM</span>
+            <span class="cs-tag">Análisis de errores por tipo de hoja</span>
+          </div>
+        </div>
+
+        <div class="hidden" id="compareContent">
+          <div class="compare-table-wrap">
+            <table class="compare-table">
+              <thead>
+                <tr>
+                  <th>Métrica</th>
+                  <th>Pipeline Clásico</th>
+                  <th>CNN</th>
+                </tr>
+              </thead>
+              <tbody id="compareTableBody"></tbody>
+            </table>
+          </div>
+          <p class="results-note" id="compareIou"></p>
+          <p class="results-note" id="compareErrors"></p>
+
+          <div class="result-img-row" style="margin-top:28px;">
+            <div class="result-img-card">
+              <div class="result-img-label">Curvas de entrenamiento CNN</div>
+              <img id="imgTrainingCurves" src="" alt="Curvas de entrenamiento" class="result-img">
+            </div>
+            <div class="result-img-card">
+              <div class="result-img-label">Matriz de confusión (CNN)</div>
+              <img id="imgConfusionMatrix" src="" alt="Matriz de confusión" class="result-img">
+            </div>
+          </div>
+          <div class="result-img-row">
+            <div class="result-img-card">
+              <div class="result-img-label">Resumen comparativo</div>
+              <img id="imgCompareSummary" src="" alt="Resumen comparativo" class="result-img">
+            </div>
+            <div class="result-img-card">
+              <div class="result-img-label">Galería de errores (CNN)</div>
+              <img id="imgErrorGallery" src="" alt="Galería de errores" class="result-img">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="footer">
+    <p>🌿 LeafScan · Proyecto de Computación Gráfica · 2026</p>
+    <p>Espinoza · Huanca · Catalino</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/results.js"></script>
+  <script src="js/compare.js"></script>
+</body>
+</html>

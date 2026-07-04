@@ -1,4 +1,4 @@
-const COMPARE_API_BASE = "http://localhost:5000";
+const COMPARE_API_BASE = "https://proyecto-final-leafscan-grafica.onrender.com";
 
 async function loadComparison() {
   const loadingEl = document.getElementById("compareLoading");

@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5000";
+const API_BASE = "https://proyecto-final-leafscan-grafica.onrender.com";
 
 const uploadZone    = document.getElementById("uploadZone");
 const fileInput     = document.getElementById("fileInput");

@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
 import yaml
 from pathlib import Path
 
@@ -116,6 +117,8 @@ def draw_component_boxes(image: np.ndarray,
 
 def plot_morphology_steps(morph_result: dict,
                            save_path: str = None) -> plt.Figure:
+    import matplotlib.pyplot as plt
+
     steps = [
         ("Máscara raw",   morph_result["raw_mask"]),
         ("Apertura",      morph_result["opened"]),
@@ -144,6 +147,8 @@ def plot_final_detection(original: np.ndarray,
                           annotated: np.ndarray,
                           cc_result: dict,
                           save_path: str = None) -> plt.Figure:
+    import matplotlib.pyplot as plt
+
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
 
     ax1.imshow(cv2.cvtColor(original, cv2.COLOR_BGR2RGB))
@@ -185,6 +190,7 @@ def run_morphology(mask: np.ndarray,
 
 if __name__ == "__main__":
     import sys
+    import matplotlib.pyplot as plt
     from segmentation import run_segmentation, identify_disease_cluster
 
     if len(sys.argv) < 2:

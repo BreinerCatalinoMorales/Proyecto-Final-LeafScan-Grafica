@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
 import yaml
 import json
 from pathlib import Path
@@ -135,6 +136,8 @@ def save_metrics_to_json(results: list, output_path: str) -> None:
 
 def plot_pipeline_summary(result: dict,
                            save_path: str = None) -> plt.Figure:
+    import matplotlib.pyplot as plt
+
     def to_rgb(img):
         if len(img.shape) == 2:
             return cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
@@ -179,6 +182,7 @@ def plot_pipeline_summary(result: dict,
 
 if __name__ == "__main__":
     import sys
+    import matplotlib.pyplot as plt
 
     if len(sys.argv) < 2:
         print("Uso: python classical_pipeline.py <ruta_imagen>")

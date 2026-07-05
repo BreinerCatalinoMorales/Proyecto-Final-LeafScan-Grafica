@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
 import yaml
 from pathlib import Path
 
@@ -102,6 +103,8 @@ def compute_color_statistics(image: np.ndarray) -> dict:
 def plot_rgb_histograms(image: np.ndarray,
                         title: str = "Histogramas RGB",
                         save_path: str = None) -> plt.Figure:
+    import matplotlib.pyplot as plt
+
     hists = compute_rgb_histograms(image)
     colors = {"R": "red", "G": "green", "B": "blue"}
 
@@ -128,6 +131,8 @@ def plot_rgb_histograms(image: np.ndarray,
 def plot_hsv_histograms(image: np.ndarray,
                         title: str = "Histogramas HSV",
                         save_path: str = None) -> plt.Figure:
+    import matplotlib.pyplot as plt
+
     cfg_default = {"hue_bins": 36, "sat_bins": 32, "val_bins": 32}
     hists = compute_hsv_histograms(image,
                                    hue_bins=cfg_default["hue_bins"],
@@ -159,6 +164,8 @@ def plot_comparison(original: np.ndarray,
                     overlay: np.ndarray,
                     disease_ratio: float,
                     save_path: str = None) -> plt.Figure:
+    import matplotlib.pyplot as plt
+
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
 
     ax1.imshow(bgr_to_rgb(original))
@@ -202,6 +209,7 @@ def analyze_image(image: np.ndarray, config: dict) -> dict:
 
 if __name__ == "__main__":
     import sys
+    import matplotlib.pyplot as plt
 
     if len(sys.argv) < 2:
         print("Uso: python color_analysis.py <ruta_imagen>")

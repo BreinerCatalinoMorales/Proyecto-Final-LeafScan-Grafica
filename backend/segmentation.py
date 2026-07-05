@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
 import yaml
 from pathlib import Path
 
@@ -136,6 +137,8 @@ def plot_segmentation_results(original: np.ndarray,
                                seg_result: dict,
                                metrics: dict,
                                save_path: str = None) -> plt.Figure:
+    import matplotlib.pyplot as plt
+
     disease_idx  = metrics["disease_cluster_idx"]
     disease_mask = seg_result["cluster_masks"][disease_idx]
 
@@ -169,6 +172,8 @@ def plot_segmentation_results(original: np.ndarray,
 
 def plot_cluster_distribution(metrics: dict,
                                save_path: str = None) -> plt.Figure:
+    import matplotlib.pyplot as plt
+
     clusters    = metrics["clusters"]
     labels_bar  = [f"Cluster {c['id']}" for c in clusters]
     percentages = [c["percentage"] for c in clusters]
@@ -228,6 +233,7 @@ def run_segmentation(image: np.ndarray, config: dict) -> dict:
 
 if __name__ == "__main__":
     import sys
+    import matplotlib.pyplot as plt
 
     if len(sys.argv) < 2:
         print("Uso: python segmentation.py <ruta_imagen>")
